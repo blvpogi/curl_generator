@@ -88,20 +88,16 @@
             }
             const url = curl.match(/curl "(.*?)"/)[1];
 
-            const headers = [];
+            const header_array = [];
             curl.split('-H "')
                 .splice(1)
                 .forEach(function (value, index) {
-                    const header_key = value.split('"')[0].split(": ")[0];
-                    if (header_key != "Accept-Encoding") {
-                        const header_value = value.split('"')[0].split('"')[1];
-                        headers.push(`\t"${header_key}": "${header_value}",`);
-                    }
+                    header_array.push('"' + value.split('"')[0] + '"');
                 });
-
+            const headers = header_array.join(",\n\t\t");
             document.getElementById(
                 "curl"
-            ).value = `$ch = curl_init();\ncurl_setopt_array($ch, [\n\tCURLOPT_URL => "${url}",\n\tCURLOPT_RETURNTRANSFER => true,\n\tCURLOPT_FOLLOWLOCATION => true,\n\tCURLOPT_SSL_VERIFYPEER => false,\n\tCURLOPT_SSL_VERIFYHOST => false,\n\tCURLOPT_COOKIEFILE => $this->cookies,\n\tCURLOPT_COOKIEJAR => $this->cookies,\n\tCURLOPT_HTTPHEADER => $headers,\n\tCURLOPT_POSTFIELDS => "${post_data}"\n]);\n\n$response = curl_exec($ch);\ncurl_close($ch);`;
+            ).value = `$ch = curl_init();\ncurl_setopt_array($ch, [\n\tCURLOPT_URL => "${url}",\n\tCURLOPT_RETURNTRANSFER => true,\n\tCURLOPT_FOLLOWLOCATION => true,\n\tCURLOPT_SSL_VERIFYPEER => false,\n\tCURLOPT_SSL_VERIFYHOST => false,\n\tCURLOPT_COOKIEFILE => $cookie,\n\tCURLOPT_COOKIEJAR => $cookie,\n\tCURLOPT_HTTPHEADER => [\n\t\t${headers}\n\t],\n\n\tCURLOPT_POSTFIELDS => "${post_data}"\n]);\n\n$response = curl_exec($ch);\ncurl_close($ch);`;
         };
         const copy_curl = () => {
             const curl = document.getElementById("curl");
