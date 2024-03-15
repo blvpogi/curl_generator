@@ -50,7 +50,7 @@
                                 <div class="col-2">
                                     <button
                                         class="btn btn-sm w-100 mb-2"
-                                        onclick="Copy()"
+                                        onclick="copy_curl()"
                                     >
                                         <span class="material-symbols-outlined"
                                             >content_copy</span
@@ -61,7 +61,7 @@
                                     <button class="btn btn-sm w-100 mb-2">
                                         <span
                                             class="material-symbols-outlined"
-                                            onclick="Delete()"
+                                            onclick="delete_curl()"
                                             >delete</span
                                         >
                                     </button>
@@ -81,10 +81,10 @@
     <script>
         const generate_requests = () => {
             const curl = document.getElementById("curl").value.replace("^", "");
-            if (curl.match(/--data-raw "(.*?)"/)) {
-                const post = curl.match(/--data-raw "(.*?)"/)[1];
+            if (curl.match(/--data-raw "(.*?)"/)[1]) {
+                var post_data = curl.match(/--data-raw "(.*?)"/)[1];
             } else {
-                const post = "";
+                var post_data = "";
             }
             const url = curl.match(/curl "(.*?)"/)[1];
 
@@ -101,15 +101,15 @@
 
             document.getElementById(
                 "curl"
-            ).value = `$ch = curl_init();\ncurl_setopt_array($ch, [\n\tCURLOPT_URL => "${url}",\n\tCURLOPT_RETURNTRANSFER => true,\n\tCURLOPT_FOLLOWLOCATION => true,\n\tCURLOPT_SSL_VERIFYPEER => false,\n\tCURLOPT_SSL_VERIFYHOST => false,\n\tCURLOPT_COOKIEFILE => $this->cookies,\n\tCURLOPT_COOKIEJAR => $this->cookies,\n\tCURLOPT_HTTPHEADER => $headers,\n\tCURLOPT_POSTFIELDS => "${post}"\n]);\n$response = curl_exec($ch);\ncurl_close($ch);`;
+            ).value = `$ch = curl_init();\ncurl_setopt_array($ch, [\n\tCURLOPT_URL => "${url}",\n\tCURLOPT_RETURNTRANSFER => true,\n\tCURLOPT_FOLLOWLOCATION => true,\n\tCURLOPT_SSL_VERIFYPEER => false,\n\tCURLOPT_SSL_VERIFYHOST => false,\n\tCURLOPT_COOKIEFILE => $this->cookies,\n\tCURLOPT_COOKIEJAR => $this->cookies,\n\tCURLOPT_HTTPHEADER => $headers,\n\tCURLOPT_POSTFIELDS => "${post_data}"\n]);\n\n$response = curl_exec($ch);\ncurl_close($ch);`;
         };
-        const Copy = () => {
+        const copy_curl = () => {
             const curl = document.getElementById("curl");
 
             curl.select();
 
             document.execCommand("copy");
         };
-        const Delete = () => (document.getElementById("curl").value = "");
+        const delete_curl = () => (document.getElementById("curl").value = "");
     </script>
 </html>
