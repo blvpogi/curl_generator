@@ -81,7 +81,7 @@
     <script>
         const generate_requests = () => {
             const curl = document.getElementById("curl").value.replace("^", "");
-            if (curl.match(/--data-raw "(.*?)"/)[1]) {
+            if (curl.match(/--data-raw "(.*?)"/)) {
                 var post_data = curl.match(/--data-raw "(.*?)"/)[1];
             } else {
                 var post_data = "";
