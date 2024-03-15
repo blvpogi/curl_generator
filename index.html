@@ -81,10 +81,11 @@
     <script>
         const generate_requests = () => {
             const curl = document.getElementById("curl").value.replace("^", "");
-            if (curl.match(/--data-raw "(.*?)"/)[1]) {
-                var data = curl.match(/--data-raw "(.*?)"/)[1];
+            if (curl.match(/--data-raw "(.*?)"/)) {
+                const post = curl.match(/--data-raw "(.*?)"/)[1];
+            } else {
+                const post = "";
             }
-
             const url = curl.match(/curl "(.*?)"/)[1];
 
             const headers = [];
@@ -100,7 +101,7 @@
 
             document.getElementById(
                 "curl"
-            ).value = `$ch = curl_init();\ncurl_setopt_array($ch, [\nCURLOPT_URL => $url,\n\tCURLOPT_RETURNTRANSFER => true,\n\tCURLOPT_FOLLOWLOCATION => true,\n\tCURLOPT_SSL_VERIFYPEER => false,\n\tCURLOPT_SSL_VERIFYHOST => false,\n\tCURLOPT_COOKIEFILE => $this->cookies,\n\tCURLOPT_COOKIEJAR => $this->cookies,\n\tCURLOPT_HTTPHEADER => $headers,\n\tCURLOPT_PROXY => $this->proxy,\n\tCURLOPT_PROXYUSERPWD => $this->userpass,\n\tCURLOPT_POSTFIELDS => $post\n]);\n$response = curl_exec($ch);\ncurl_close($ch);`;
+            ).value = `$ch = curl_init();\ncurl_setopt_array($ch, [\n\tCURLOPT_URL => "${url}",\n\tCURLOPT_RETURNTRANSFER => true,\n\tCURLOPT_FOLLOWLOCATION => true,\n\tCURLOPT_SSL_VERIFYPEER => false,\n\tCURLOPT_SSL_VERIFYHOST => false,\n\tCURLOPT_COOKIEFILE => $this->cookies,\n\tCURLOPT_COOKIEJAR => $this->cookies,\n\tCURLOPT_HTTPHEADER => $headers,\n\tCURLOPT_POSTFIELDS => "${post}"\n]);\n$response = curl_exec($ch);\ncurl_close($ch);`;
         };
         const Copy = () => {
             const curl = document.getElementById("curl");
